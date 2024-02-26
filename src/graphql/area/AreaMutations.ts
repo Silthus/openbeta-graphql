@@ -80,7 +80,7 @@ const AreaMutations = {
     )
   },
 
-  bulkImportAreas: async (_, { input }: { input: BulkImportInputType }, {
+  bulkImport: async (_, { input }: { input: BulkImportInputType }, {
     dataSources,
     user
   }: ContextWithAuth): Promise<BulkImportResultType> => {

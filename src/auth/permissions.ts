@@ -13,7 +13,7 @@ const permissions = shield({
     updateArea: isEditor,
     updateClimbs: isEditor,
     deleteClimbs: isEditor,
-    bulkImportAreas: isEditor,
+    bulkImport: isEditor,
     updateUserProfile: and(isOwner, isValidEmail),
     addEntityTag: or(isMediaOwner, isUserAdmin),
     removeEntityTag: or(isMediaOwner, isUserAdmin),

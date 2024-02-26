@@ -12,8 +12,8 @@ import addAreaWithClimbs from './bulk-import-data/add-area-with-climbs.json' ass
 
 describe('bulkImport', () => {
   const query = `
-    mutation bulkImportAreas($input: BulkImportInput!) {
-      bulkImportAreas(input: $input) {
+    mutation bulkImport($input: BulkImportInput!) {
+      bulkImport(input: $input) {
         addedAreas {
           uuid
           metadata {
@@ -69,7 +69,7 @@ describe('bulkImport', () => {
     const res = await queryAPI({
       app,
       query,
-      operationName: 'bulkImportAreas',
+      operationName: 'bulkImport',
       variables: {input: addAreaWithClimbs}
     })
     expect(res.statusCode).toBe(200)
@@ -81,7 +81,7 @@ describe('bulkImport', () => {
       app,
       userUuid,
       query,
-      operationName: 'bulkImportAreas',
+      operationName: 'bulkImport',
       variables: {input: addAreaWithClimbs}
     })
     expect(res.statusCode).toBe(200)
@@ -94,7 +94,7 @@ describe('bulkImport', () => {
       userUuid,
       roles: ['editor'],
       query,
-      operationName: 'bulkImportAreas',
+      operationName: 'bulkImport',
       variables: {input: addAreaWithClimbs}
     })
     expect(res.status).toBe(200)
@@ -107,14 +107,14 @@ describe('bulkImport', () => {
         userUuid,
         roles: ['editor'],
         query,
-        operationName: 'bulkImportAreas',
+        operationName: 'bulkImport',
         variables: {
           input: addAreaWithClimbs
         }
       });
       expect(res.body.errors).toBeFalsy()
 
-      const result = res.body.data.bulkImportAreas as BulkImportResultType
+      const result = res.body.data.bulkImport as BulkImportResultType
       expect(result.addedAreas.length).toBe(4)
 
       const committedAreas = await Promise.all(result.addedAreas.map((area) => bulkImport.findOneAreaByUUID(muuid.from(area.metadata.area_id))));
