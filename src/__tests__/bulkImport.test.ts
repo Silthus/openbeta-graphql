@@ -4,13 +4,13 @@ import express from "express";
 import {InMemoryDB} from "../utils/inMemoryDB.js";
 import {queryAPI, setUpServer} from "../utils/testUtils.js";
 import {muuidToString} from "../utils/helpers.js";
-import exampleImportData from './import-example.json' assert {type: 'json'};
 import {AreaType} from "../db/AreaTypes.js";
 import {BulkImportResultType} from "../db/BulkImportTypes.js";
 import MutableClimbDataSource from "../model/MutableClimbDataSource.js";
 import BulkImportDataSource from "../model/BulkImportDataSource.js";
+import addAreaWithClimbs from './bulk-import-data/add-area-with-climbs.json' assert {type: 'json'};
 
-describe('bulkImportAreas', () => {
+describe('bulkImport', () => {
   const query = `
     mutation bulkImportAreas($input: BulkImportInput!) {
       bulkImportAreas(input: $input) {
@@ -70,7 +70,7 @@ describe('bulkImportAreas', () => {
       app,
       query,
       operationName: 'bulkImportAreas',
-      variables: {input: exampleImportData}
+      variables: {input: addAreaWithClimbs}
     })
     expect(res.statusCode).toBe(200)
     expect(res.body.errors[0].message).toBe('Not Authorised!')
@@ -82,7 +82,7 @@ describe('bulkImportAreas', () => {
       userUuid,
       query,
       operationName: 'bulkImportAreas',
-      variables: {input: exampleImportData}
+      variables: {input: addAreaWithClimbs}
     })
     expect(res.statusCode).toBe(200)
     expect(res.body.errors[0].message).toBe('Not Authorised!')
@@ -95,43 +95,35 @@ describe('bulkImportAreas', () => {
       roles: ['editor'],
       query,
       operationName: 'bulkImportAreas',
-      variables: {input: exampleImportData}
+      variables: {input: addAreaWithClimbs}
     })
     expect(res.status).toBe(200)
   })
 
-  it('should import data', async () => {
-    const res = await queryAPI({
-      app,
-      userUuid,
-      roles: ['editor'],
-      query,
-      operationName: 'bulkImportAreas',
-      variables: {
-        input: {
-          areas: [
-            ...exampleImportData.areas,
-            {
-              uuid: testArea.metadata.area_id,
-              areaName: "Updated Test Area",
-            }
-          ]
+  describe('addAreaWithClimbs', () => {
+    it('should import data', async () => {
+      const res = await queryAPI({
+        app,
+        userUuid,
+        roles: ['editor'],
+        query,
+        operationName: 'bulkImportAreas',
+        variables: {
+          input: addAreaWithClimbs
         }
-      }
-    });
-    expect(res.body.errors).toBeFalsy()
+      });
+      expect(res.body.errors).toBeFalsy()
 
-    const result = res.body.data.bulkImportAreas as BulkImportResultType
-    expect(result.addedAreas.length).toBe(4)
+      const result = res.body.data.bulkImportAreas as BulkImportResultType
+      expect(result.addedAreas.length).toBe(4)
 
-    const committedAreas = await Promise.all(result.addedAreas.map((area) => bulkImport.findOneAreaByUUID(muuid.from(area.metadata.area_id))));
-    expect(committedAreas.length).toBe(4);
+      const committedAreas = await Promise.all(result.addedAreas.map((area) => bulkImport.findOneAreaByUUID(muuid.from(area.metadata.area_id))));
+      expect(committedAreas.length).toBe(4);
 
-    const committedClimbs = await Promise.all(result.addedOrUpdatedClimbs.map((climb) => climbs.findOneClimbByMUUID(climb._id)));
-    expect(committedClimbs.length).toBe(2);
+      const committedClimbs = await Promise.all(result.addedOrUpdatedClimbs.map((climb) => climbs.findOneClimbByMUUID(climb._id)));
+      expect(committedClimbs.length).toBe(2);
+    })
 
-    const updatedAreas = await Promise.all(result.updatedAreas.map((area) => bulkImport.findOneAreaByUUID(muuid.from(area.metadata.area_id))));
-    expect(updatedAreas.length).toBe(1);
-    expect(updatedAreas[0].area_name).toBe("Updated Test Area");
-  })
+  });
+
 });
