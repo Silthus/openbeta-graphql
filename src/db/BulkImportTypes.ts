@@ -30,8 +30,8 @@ export interface BulkImportAreaInputType {
 export interface BulkImportClimbInputType {
   uuid?: MUUID
   name?: string
-  grade: string
-  disciplines: DisciplineType
+  grade?: string
+  disciplines?: DisciplineType
   safety?: SafetyType
   lng?: number
   lat?: number
@@ -48,8 +48,8 @@ export interface BulkImportClimbInputType {
 
 export interface BulkImportPitchesInputType {
   id?: MUUID
-  pitchNumber: number
-  grade: string
+  pitchNumber?: number
+  grade?: string
   disciplines?: DisciplineType
   description?: string
   length?: number

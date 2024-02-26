@@ -102,9 +102,9 @@ input BulkImportClimbInput {
   "The name that this climb is commonly identified by (or if provided together with a uuid, the updated name of the climb)."
   name: String
   "The difficulty grade of the climb. Must be coherent with the area's gradeContext. I. e. gradeContext = 'US' requires denomination in yds/vscale (climbing/bouldering), so '5.11'/'V14', 'FR' would be french/font '9c+'/'9a', 'UIIA' would be uiaa/font '9+'/'9a'. (see https://github.com/OpenBeta/sandbag)."
-  grade: String!
+  grade: String
   "Object of applicable disciplines (e.g. { \"trad\": true }). Options: trad, sport, bouldering, deepwatersolo, alpine, ice, mixed, aid, tr (= toprope). Can be combined."
-  disciplines: DisciplineType!
+  disciplines: DisciplineType
   "The safety rating of a climb based on US movie ratings (see https://github.com/OpenBeta/openbeta-graphql/blob/9c517329db079c922fe7f092a78b658cb295e158/src/graphql/schema/Climb.gql#L177)."
   safety: SafetyEnum
   "Longitude coordinate of the climb, using the WGS 84 reference system."
@@ -140,9 +140,9 @@ input BulkImportPitchesInput {
   "The pitch UUID (if provided, the pitch data will be UPDATED)."
   id: ID
   "The number of the pitch in the sequence."
-  pitchNumber: Int!
+  pitchNumber: Int
   "The difficulty grade of the pitch (see Climb.grade)."
-  grade: String!
+  grade: String
   "The climbing disciplines applicable to the pitch (see Climb.disciplines)."
   disciplines: DisciplineType
   "The description of the pitch."
