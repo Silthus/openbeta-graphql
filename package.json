@@ -7,6 +7,9 @@
   "author": "<openbeta@noreply>",
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
+    "@graphql-codegen/add": "^5.0.2",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/typescript": "4.0.6",
     "@types/auth0": "^3.3.2",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.13.0",
@@ -73,8 +76,8 @@
     "lint": "yarn ts-standard",
     "fix": "yarn ts-standard --fix",
     "test": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest --runInBand",
-    "build": "tsc -p tsconfig.json",
-    "build-release": "tsc  -p tsconfig.release.json",
+    "build": "yarn codegen && tsc -p tsconfig.json",
+    "build-release": "yarn codegen && tsc -p tsconfig.release.json",
     "clean": "tsc -b --clean && rm -rf build/*",
     "serve": "yarn build && node --experimental-json-modules build/main.js",
     "serve-dev": "echo \"🚨 LOCAL_DEV_BYPASS_AUTH enabled 🚨\" && LOCAL_DEV_BYPASS_AUTH=true yarn serve",
@@ -90,7 +93,8 @@
     "import-users": "yarn build && node build/db/utils/jobs/migration/CreateUsersCollection.js",
     "maptiles:export-db": "node build/db/utils/jobs/MapTiles/exportCmd.js",
     "maptiles:upload": "./scripts/upload-tiles.sh",
-    "maptiles:full": "yarn build && yarn maptiles:export-db && yarn maptiles:upload"
+    "maptiles:full": "yarn build && yarn maptiles:export-db && yarn maptiles:upload",
+    "codegen": "graphql-codegen --config codegen.yaml"
   },
   "standard": {
     "plugins": [

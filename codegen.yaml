@@ -1,0 +1,15 @@
+overwrite: true
+schema:
+  - "src/graphql/common/*.ts"
+  - "src/graphql/schema/*.gql"
+generates:
+  "./src/__generated__/graphql.ts":
+    plugins:
+      - "typescript"
+      - add:
+          content: "import { MUUID } from 'uuid-mongodb';\n"
+    config:
+      useIndexSignature: true
+      scalars:
+        MUUID: MUUID
+        Date: Date
