@@ -13,3 +13,6 @@ generates:
       scalars:
         MUUID: MUUID
         Date: Date
+    hooks:
+      afterOneFileWrite:
+        - yarn fix
